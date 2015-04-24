@@ -3,6 +3,7 @@
 
 ### Introduction
   I was becoming intererted in computer graphic since I studied DirectX in 2013. I've ever implemented a simple Particle System, the effect of the particles amazed me. It is so wonderful when I control the pixels in my own hands. When I was learning in the university, the math/physics knowledge make me curious since the teacher said it's useful for the future life. But I think it's useless in the daily life until I learned DirectX.
+  
   I decided to write this project when I saw that many gurus in CG suggested implementing the software engine to understand the piplines excuted in the GPU.  So this project is for educational purpose and it's still on the way.
   
 ### Done
