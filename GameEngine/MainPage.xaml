@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="GameEngine.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameEngine"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    RequestedTheme="Light">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Border HorizontalAlignment="Left" Height="700" Margin="51,23,0,0" VerticalAlignment="Top" Width="700" BorderBrush="Black" BorderThickness="1" PointerPressed="Border_PointerPressed" PointerReleased="Border_PointerReleased">
+            <Image Name="imageRendering"/>
+        </Border>
+        <Button Content="Draw 2D Triangle" HorizontalAlignment="Left" Margin="919,137,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Clear" HorizontalAlignment="Left" Margin="937,82,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        <Button Content="Render X" HorizontalAlignment="Left" Margin="804,247,0,0" VerticalAlignment="Top" Click="Button_Click_3"/>
+        <Button Content="Render Z" HorizontalAlignment="Left" Margin="807,322,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
+        <Button Content="Render Y" HorizontalAlignment="Left" Margin="810,398,0,0" VerticalAlignment="Top" Click="Button_Click_4"/>
+
+    </Grid>
+</Page>
