@@ -7,14 +7,12 @@
   
 ### Done
   1. Rasterize line, triangle.
-     References:
-      -[Bresenham's line algorithm](http://en.wikipedia.org/wiki/Bresenham's_line_algorithm)
-      -[Introduction to Software-based Rendering: Simple Line Drawing](http://joshbeam.com/articles/simple_line_drawing/)
-      -[Software Rasterization Algorithms for Filling Triangles](http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html)
-      -Z-buffer
+      - [Bresenham's line algorithm](http://en.wikipedia.org/wiki/Bresenham's_line_algorithm)
+      - [Introduction to Software-based Rendering: Simple Line Drawing](http://joshbeam.com/articles/simple_line_drawing/)
+      - [Software Rasterization Algorithms for Filling Triangles](http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html)
+      - Z-buffer
   2. Perspective project 3D cube to screen space. 
-    References:
-      -Book [Introduction to 3D Game Programming with DirectX 11](http://www.amazon.com/Introduction-3D-Game-Programming-DirectX/dp/1936420228/ref=sr_1_1?ie=UTF8&qid=1429889599&sr=8-1) Chapter 5
+      - Book [Introduction to 3D Game Programming with DirectX 11](http://www.amazon.com/Introduction-3D-Game-Programming-DirectX/dp/1936420228/ref=sr_1_1?ie=UTF8&qid=1429889599&sr=8-1) Chapter 5
 
 ### To Do
   1. Light
