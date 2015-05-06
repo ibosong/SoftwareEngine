@@ -32,6 +32,7 @@
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -50,5 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image.jpg" />
   </ItemGroup>
 </Project>

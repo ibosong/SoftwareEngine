@@ -14,23 +14,23 @@ namespace GameEngine
 		void SetPixel(unsigned int x, unsigned int y, double z, const Color &color);
 		void Clear();
 
-		void DrawLine(const Point &pt1, const Point &pt2);
+		void DrawLine(const Vertex &v1, const Vertex &v2);
 		void Paint(const Color & color);
-		void DrawTriangle(Point pt1, Point pt2, Point pt3);
+		void DrawTriangle(Vertex v1, Vertex v2, Vertex v3);
 
-		void RenderMeth(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix);
+		void XM_CALLCONV RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
-		void RenderX(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix);
+		void XM_CALLCONV RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
-		void RenderZ(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix);
+		void XM_CALLCONV RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
-		void RenderY(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix);
+		void XM_CALLCONV RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
 	private:
 		float Interpolate(float min, float max, float percentage);
-		void SortTrianglePoints(Point &pt1, Point &pt2, Point &pt3);
+		void SortTrianglePoints(Vertex &pt1, Vertex &pt2, Vertex &pt3);
 		// Project vertex to screen space
-		DirectX::XMFLOAT3 Project(DirectX::XMFLOAT3 coord, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix);
+		void XM_CALLCONV Project(DirectX::XMFLOAT3& coord, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 		byte* m_buffer;
 		unsigned int m_pixelWidth;
 		unsigned int m_pixelHeight;

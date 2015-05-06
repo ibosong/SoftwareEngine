@@ -29,8 +29,8 @@ namespace GameEngine
 		unsigned int m_pixelWidth;
 		unsigned int m_pixelHeight;
 
-		DirectX::XMFLOAT4X4 m_viewMatrix;
-		DirectX::XMFLOAT4X4 m_projectMatrix;
+		DirectX::XMMATRIX m_viewMatrix;
+		DirectX::XMMATRIX m_projectMatrix;
 		
 		void Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void Button_Click_1(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);

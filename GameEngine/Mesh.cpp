@@ -3,12 +3,12 @@
 using namespace GameEngine;
 
 Mesh::Mesh()
-
 {
+
 }
 
-void Mesh::Initialize(const std::vector<Vertex>& vertices, const std::vector<unsigned short> indices)
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned short> indices, Texture texture) :
+Vertices(vertices), Indices(indices), texture(texture)
 {
-	Vertices = std::vector<Vertex>(vertices);
-	Indices = std::vector<unsigned short>(indices);
+
 }

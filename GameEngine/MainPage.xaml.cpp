@@ -29,42 +29,74 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 {
 	InitializeComponent();	
 	
-	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
+	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
 	
 	
 
 	std::vector<Vertex> vertices = {
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(1.f, 0.f, 0.f)),// 0 
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(0.f, 0.f, 1.f)),	// 1 
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), Color(0.f, 1.f, 0.f)),	// 2
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), Color(1.f, 1.f, 0.f)),	// 3
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(0.f, 1.f, 1.f)),	// 4
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 1.f)),	// 5
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), Color(0.f, 0.f, 0.f)),	// 6
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(1.f, 1.f, 0.5f))	// 7
+			// +z face
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 0.f), XMFLOAT2(-0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(1.f, 0.f, 0.f), XMFLOAT2(-0.5f, 0.5f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.5f, 0.5f)),
+			// -z face
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(1.f, 1.f, 0.f), XMFLOAT2(-0.5f, -0.5f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), Color(1.f, 1.f, 0.f), XMFLOAT2(-0.5f, 0.5f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.5f, 0.5f)),
+			// +y face
+			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), Color(0.f, 1.f, 0.f), XMFLOAT2(-0.5f, -0.5f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 0.f), XMFLOAT2(-0.5f, 0.5f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.5f, 0.5f)),
+			// -y face
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(1.f, 0.f, 1.f), XMFLOAT2(-0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.5f, -0.5f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 1.f), XMFLOAT2(-0.5f, 0.5f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.5f, 0.5f)),
+			// -x face
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(-0.5f, -0.5f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f,  0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.5f, -0.5f)),	
+			Vertex(XMFLOAT3(-0.3f,  0.3f, -0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(-0.5f, 0.5f)),	
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.5f, 0.5f)),	
+			// +x face
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(-0.5f, -0.5f)),	
+			Vertex(XMFLOAT3(0.3f, 0.3f,  -0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.5f, -0.5f)),	
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(-0.5f, 0.5f)),	
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.5f, 0.5f)),	
+			
+			
 	};
+
 	std::vector<unsigned short> cubeIndices = {
-		0, 2, 1, // -x
-		1, 2, 3,
+		// Front Face
+		0, 1, 2,
+		0, 2, 3,
 
-		4, 5, 6, // +x
-		5, 7, 6,
+		// Back Face
+		4, 5, 6,
+		4, 6, 7,
 
-		0, 1, 5, // -y
-		0, 5, 4,
+		// Top Face
+		8, 9, 10,
+		8, 10, 11,
 
-		2, 6, 7, // +y
-		2, 7, 3,
+		// Bottom Face
+		12, 13, 14,
+		12, 14, 15,
 
-		0, 4, 6, // -z
-		0, 6, 2,
+		// Left Face
+		16, 17, 18,
+		16, 18, 19,
 
-		1, 3, 7, // +z
-		1, 7, 5
+		// Right Face
+		20, 21, 22,
+		20, 22, 23
 	};
 
-	m_cube = Mesh();
-	m_cube.Initialize(vertices, cubeIndices);
+	Texture tex("image.jpg", m_pixelWidth, m_pixelHeight);
+
+	m_cube = Mesh(vertices, cubeIndices, tex);
 
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));
 	float aspectRatio = outputSize.Width / outputSize.Height;
@@ -76,21 +108,19 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 	{
 		fovAngleY *= 2.0f;
 	}
-	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovLH(
+	m_projectMatrix = XMMatrixPerspectiveFovLH(
 		fovAngleY,
 		aspectRatio,
 		1.0f,
 		50.0f
 		);
-	XMStoreFloat4x4(&m_projectMatrix, perspectiveMatrix);
 
 	// Eye is at (0,1.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
 	static const XMVECTORF32 eye = { 0.0f, 0.9f, 3.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-	XMMATRIX viewMatrix = XMMatrixLookAtLH(eye, at, up);
-	XMStoreFloat4x4(&m_viewMatrix, viewMatrix);
+	m_viewMatrix = XMMatrixLookAtLH(eye, at, up);
 
 
 	//XMMATRIX transformMatrix = viewMatrix * perspectiveMatrix;
@@ -132,12 +162,8 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 	}
 	//angle = std::fmod(angle, 3.14 * 2);
 	XMMATRIX world = XMMatrixRotationY(angle);
-	XMMATRIX transformMatrix = world * XMLoadFloat4x4(&m_viewMatrix);
-	
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
 
-	m_rasterizer.RenderMeth(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, world, m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -153,12 +179,7 @@ void MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedE
 
 	m_bitmap->Invalidate();*/
 
-	XMMATRIX transformMatrix = /*XMMatrixRotationY(0.14f) **/ XMLoadFloat4x4(&m_viewMatrix);
-
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
-
-	m_rasterizer.RenderMeth(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -180,12 +201,8 @@ void MainPage::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI
 	{
 		angle = 0.f;
 	}
-	XMMATRIX transformMatrix = XMMatrixRotationY(angle) * XMLoadFloat4x4(&m_viewMatrix);
 
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
-
-	m_rasterizer.RenderMeth(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixRotationY(angle), m_viewMatrix, m_projectMatrix);
 	m_bitmap->Invalidate();
 }
 
@@ -204,12 +221,7 @@ void MainPage::Border_PointerReleased(Platform::Object^ sender, Windows::UI::Xam
 
 void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	XMMATRIX transformMatrix = XMMatrixRotationY(0.14f) * XMLoadFloat4x4(&m_viewMatrix);
-
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
-
-	m_rasterizer.RenderZ(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -217,12 +229,8 @@ void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI:
 
 void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	XMMATRIX transformMatrix = XMMatrixRotationY(0.14f) * XMLoadFloat4x4(&m_viewMatrix);
 
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
-
-	m_rasterizer.RenderX(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -230,12 +238,7 @@ void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI:
 
 void GameEngine::MainPage::Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	XMMATRIX transformMatrix = XMMatrixRotationY(0.14f) * XMLoadFloat4x4(&m_viewMatrix);
-
-	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, transformMatrix);
-
-	m_rasterizer.RenderY(m_cube, matrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }

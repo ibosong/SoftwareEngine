@@ -14,7 +14,6 @@ void Rasterizer::SetFrameBuffer(byte* buffer, unsigned int width, unsigned int h
 	m_pixelWidth = width;
 	m_pixelHeight = height;
 	zbuffer = std::vector<double>(height * width, 1.0);
-	
 }
 
 void Rasterizer::Clear()
@@ -62,24 +61,18 @@ float Rasterizer::Interpolate(float min, float max, float percentage)
 	return min + (max - min) * percentage;
 }
 
-DirectX::XMFLOAT3 Rasterizer::Project(DirectX::XMFLOAT3 coord, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix)
-{ 
-	XMFLOAT4X4 transformMatrix;
-	XMStoreFloat4x4(&transformMatrix, XMLoadFloat4x4(&viewMatrix) * XMLoadFloat4x4(&projectMatrix));
-	XMVECTOR transVert = XMVector3TransformCoord(XMLoadFloat3(&coord), XMLoadFloat4x4(&transformMatrix));
+void XM_CALLCONV Rasterizer::Project(DirectX::XMFLOAT3& coord, DirectX::FXMMATRIX worldMatrix,
+	DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
+{
+	XMVECTOR transVert = XMVector3TransformCoord(XMLoadFloat3(&coord), worldMatrix * viewMatrix * projectMatrix);
 
-	//XMVECTOR vertInViewSpace = XMVector3Transform(XMLoadFloat3(&coord), XMLoadFloat4x4(&viewMatrix));
-	//XMFLOAT3 ptInViewSpace;
-	//XMStoreFloat3(&ptInViewSpace, vertInViewSpace);
 	XMFLOAT3 pt;
 	XMStoreFloat3(&pt, transVert);
 
-	auto x = pt.x * m_pixelWidth + m_pixelWidth / 2.0f;
-	auto y = -pt.y * m_pixelHeight + m_pixelHeight / 2.0f;
-
-	return XMFLOAT3(x, y, pt.z);
+	coord.x = pt.x * m_pixelWidth + m_pixelWidth / 2.0f;
+	coord.y = -pt.y * m_pixelHeight + m_pixelHeight / 2.0f;
+	coord.z = pt.z;
 }
-
 
 void Rasterizer::Paint(const Color &color)
 {
@@ -91,18 +84,18 @@ void Rasterizer::Paint(const Color &color)
 	}
 }
 
-void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
+void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2)
 {
 	// Copy the parameters.
-	unsigned int x1 = pt1.x;
-	unsigned int y1 = pt1.y;
-	double z1 = pt1.depth;
-	unsigned int x2 = pt2.x;
-	unsigned int y2 = pt2.y;
-	double z2 = pt2.depth;
+	int x1 = static_cast<int>(v1.position.x);
+	int y1 = static_cast<int>(v1.position.y);
+	double z1 = v1.depth;
+	int x2 = static_cast<int>(v2.position.x);
+	int y2 = static_cast<int>(v2.position.y);
+	double z2 = v2.depth;
 
-	Color color1 = pt1.color;
-	Color color2 = pt2.color;
+	Color color1 = v1.color;
+	Color color2 = v2.color;
 	if (x1 == x2 && y1 == y2)
 	{
 		SetPixel(x1, y1, z1, color1);
@@ -122,7 +115,7 @@ void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
 		Color tempColor = color1;
 		double zstep = (z2 - z1) * (1.f / (y2 - y1));
 		double z = z1;
-		for (unsigned int i = y1; i < y2; ++i)
+		for (int i = y1; i < y2; ++i)
 		{
 			SetPixel(x1, i, z, tempColor);
 			tempColor = tempColor + colorStep;
@@ -143,7 +136,7 @@ void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
 
 		double zstep = (z2 - z1) * (1.f / (x2 - x1));
 		double z = z1;
-		for (unsigned int i = x1; i < x2; ++i)
+		for (int i = x1; i < x2; ++i)
 		{
 			SetPixel(i, y1, z, tempColor);
 			tempColor = tempColor + colorStep;
@@ -183,12 +176,12 @@ void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
 		ydiff = static_cast<float>(y2 - y1);
 		float slope = std::abs(ydiff / xdiff);
 
-		unsigned int ystep = ydiff > 0 ? 1 : -1;
+		int ystep = ydiff > 0 ? 1 : -1;
 		
 		double zstep = (z2 - z1) * (1.f / (x2 - x1));
 		float error = 0.f;
 
-		unsigned int y = y1;
+		int y = y1;
 
 
 		Color colorStep = (color2 - color1) * (1.f / (x2 - x1));
@@ -196,7 +189,7 @@ void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
 		Color tempColor = color1;
 
 		double z = z1;
-		for (unsigned int x = x1; x < x2; ++x)
+		for (int x = x1; x < x2; ++x)
 		{
 			z += zstep;
 			error += slope;
@@ -220,97 +213,125 @@ void Rasterizer::DrawLine(const Point &pt1, const Point &pt2)
 	
 }
 
-void Rasterizer::DrawTriangle(Point pt1, Point pt2, Point pt3)
+void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3)
 {
-	// Make sure that pt1.y < pt2.y < pt3.y
-	SortTrianglePoints(pt1, pt2, pt3);
+	int x1 = static_cast<int>(v1.position.x);
+	int y1 = static_cast<int>(v1.position.y);
+	int x2 = static_cast<int>(v2.position.x);
+	int y2 = static_cast<int>(v2.position.y);
+	int x3 = static_cast<int>(v3.position.x);
+	int y3 = static_cast<int>(v3.position.y);
 
-	unsigned int x4 = 0, y4 = pt2.y;
-	x4 = (y4 - pt1.y) * (pt3.x - pt1.x) / (pt3.y - pt1.y) + pt1.x;
-	double z4 =	(y4 - pt1.y) *	(pt3.depth - pt1.depth) / (pt3.y - pt1.y) +	pt1.depth;
+	// Make sure that v1.position.y < v2.position.y < v3.position.y
+	SortTrianglePoints(v1, v2, v3);
+	// Divide the triangle into 2 parts
+	// The top triangle
+	// 
+	int x4 = 0, y4 = static_cast<int>(v2.position.y);
+	x4 = (y4 - y1) * (x3 - x1) / (y3 - y1) + x1;
+	double z4 = (y4 - y1) *	(v3.position.z - v1.position.z) / (y3 - y1) + v1.position.z;
 	
-	Color colorStep13 = (pt3.color - pt1.color) * (1 / static_cast<float>(pt3.y - pt1.y));
-	Color colorStep12 = (pt2.color - pt1.color) * (1 / static_cast<float>(pt2.y - pt1.y));
-	Point pt4(x4, y4, z4, colorStep13 * static_cast<float>(y4 - pt1.y));
+	Color colorStep13 = (v3.color - v1.color) * (1 / (y3 - y1));
+	Color colorStep12 = (v2.color - v1.color) * (1 / (y2 - y1));
 
-	float xdiff12 = static_cast<float>(static_cast<int>(pt2.x - pt1.x));
-	float ydiff12 = static_cast<float>(static_cast<int>(pt2.y - pt1.y));
-	double zdiff12 = pt2.depth - pt1.depth;
-	float xdiff13 = static_cast<float>(static_cast<int>(pt3.x - pt1.x));
-	float ydiff13 = static_cast<float>(static_cast<int>(pt3.y - pt1.y));
-	double zdiff13 = pt3.depth - pt1.depth;
+	XMFLOAT2 texCoorStep13 = XMFLOAT2((v3.texCoor.x - v1.texCoor.x) / (y3 - y1), 
+		(v3.texCoor.y - v1.texCoor.y)  / (y3 - y1));
+	XMFLOAT2 texCoorStep12 = XMFLOAT2((v2.texCoor.x - v1.texCoor.x) / (y2 - y1), 
+		(v2.texCoor.y - v1.texCoor.y) / (y2 - y1));
+
+	XMFLOAT2 texCoor4(texCoorStep13.x * (y4 - y1), texCoorStep13.y * (y4 - y1));
+
+	Vertex v4(XMFLOAT3(x4, y4, z4), colorStep13 * (y4 - y1), texCoor4);
+
+	float xdiff12 = static_cast<float>(x2 - x1);
+	float ydiff12 = static_cast<float>(y2 - y1);
+	double zdiff12 = v2.position.z - v1.position.z;
+	float xdiff13 = static_cast<float>(x3 - x1);
+	float ydiff13 = static_cast<float>(y3 - y1);
+	double zdiff13 = v3.position.z - v1.position.z;
 	float invslope12 = xdiff12 / ydiff12;
 	float invslope13 = xdiff13 / ydiff13;
 
 	double zinvslope12 = zdiff12 / ydiff12;
 	double zinvslope13 = zdiff13 / ydiff13;
 
-	float scanX1 = static_cast<float>(pt1.x);
-	float scanX2 = static_cast<float>(pt1.x);
+	float scanX1 = static_cast<float>(x1);
+	float scanX2 = static_cast<float>(x1);
 
-	double scanZ1 = pt1.depth;
-	double scanZ2 = pt1.depth;
+	double scanZ1 = v1.position.z;
+	double scanZ2 = v1.position.z;
 
-	Color color14 = pt1.color;
-	Color color12 = pt1.color;
-	for (unsigned int i = pt1.y; i < y4; ++i)
+	Color color14 = v1.color;
+	Color color12 = v1.color;
+	XMFLOAT2 texCoor14 = v1.texCoor;
+	XMFLOAT2 texCoor12 = v1.texCoor;
+	for (int i = y1; i < y4; ++i)
 	{
-		DrawLine(Point(static_cast<unsigned int>(scanX1), i, scanZ1, color12),
-			Point(static_cast<unsigned int>(scanX2), i, scanZ2, color14));
+		DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, scanZ1), color12, texCoor12),
+			Vertex(XMFLOAT3(scanX2, (float)i, scanZ2), color14, texCoor14));
 		scanX1 += invslope12;
 		scanX2 += invslope13;
 		scanZ1 += zinvslope12;
 		scanZ2 += zinvslope13;
 		color12 = color12 + colorStep12;
 		color14 = color14 + colorStep13;
+		texCoor12 = XMFLOAT2(texCoor12.x + texCoorStep12.x, texCoor12.y + texCoorStep12.y);
+		texCoor14 = XMFLOAT2(texCoor14.x + texCoorStep13.x, texCoor14.y + texCoorStep13.y);
 	}
 
 	// Draw the lower triangle
-	if ((y4 - pt3.y) > 1.f || (y4 - pt3.y) < -1.f)
+	if ((y4 - y3) > 1.f || (y4 - y3) < -1.f)
 	{
-		Color colorStep23 = (pt3.color - pt2.color) * (1 / static_cast<float>(pt3.y - pt2.y));
+		Color colorStep23 = (v3.color - v2.color) * (1 / (y3 - y2));
+		XMFLOAT2 texCoorStep23 = XMFLOAT2((v3.texCoor.x - v2.texCoor.x) / (y3 - y2),
+			(v3.texCoor.y - v2.texCoor.y) / (y3 - y2));
 
-		float xdiff32 = static_cast<float>(static_cast<int>(pt2.x - pt3.x));
-		float ydiff32 = static_cast<float>(static_cast<int>(pt2.y - pt3.y));
-		double zdiff32 = pt2.depth - pt3.depth;
+		float xdiff32 = x2 - x3;
+		float ydiff32 = y2 - y3;
+		double zdiff32 = v2.position.z - v3.position.z;
 		float invslop32 = xdiff32 / ydiff32;
 		double zinvslop32 = zdiff32 / ydiff32;
 
-		scanX1 = static_cast<float>(pt3.x);
-		scanX2 = static_cast<float>(pt3.x);
+		scanX1 = x3;
+		scanX2 = x3;
 
-		double scanZ1 = pt3.depth;
-		double scanZ2 = pt3.depth;
+		double scanZ1 = v3.position.z;
+		double scanZ2 = v3.position.z;
 
-		Color color34 = pt3.color;
-		Color color32 = pt3.color;
-		for (unsigned int i = pt3.y; i > pt2.y - 1; --i)
+		Color color34 = v3.color;
+		Color color32 = v3.color;
+
+		XMFLOAT2 texCoor34 = v3.texCoor;
+		XMFLOAT2 texCoor32 = v3.texCoor;
+		for (int i = static_cast<int>(v3.position.y); i > y2 - 1; --i)
 		{
-			DrawLine(Point(static_cast<unsigned int>(scanX1), i, scanZ1, color32),
-				Point(static_cast<unsigned int>(scanX2), i, scanZ2, color34));
+			DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, scanZ1), color32, texCoor32),
+				Vertex(XMFLOAT3(scanX2, (float)i, scanZ2), color34, texCoor34));
 			scanX1 -= invslop32;
 			scanX2 -= invslope13;
 			scanZ1 -= zinvslop32;
 			scanZ2 -= zinvslope13;
 			color34 = color34 - colorStep13;
 			color32 = color32 - colorStep23;
+			texCoor32 = XMFLOAT2(texCoor32.x - texCoorStep23.x, texCoor32.y - texCoorStep23.y);
+			texCoor34 = XMFLOAT2(texCoor34.x - texCoorStep13.x, texCoor34.y - texCoorStep13.y);
 		}
 	}
 }
 
-void Rasterizer::SortTrianglePoints(Point &pt1, Point &pt2, Point &pt3)
+void Rasterizer::SortTrianglePoints(Vertex &pt1, Vertex &pt2, Vertex &pt3)
 {
-	Point points[] = { pt1, pt2, pt3 };
+	Vertex points[] = { pt1, pt2, pt3 };
 	std::sort(points, points + 3, 
-		[](Point p1, Point p2){
-		return p1.y < p2.y;
+		[](Vertex p1, Vertex p2){
+		return p1.position.y < p2.position.y;
 	});
 	pt1 = points[0];
 	pt2 = points[1];
 	pt3 = points[2];
 }
 
-void Rasterizer::RenderMeth(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix)
+void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
 	for (size_t i = 0; i < mesh.Indices.size(); i += 3)
 	{
@@ -318,17 +339,15 @@ void Rasterizer::RenderMeth(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, Di
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
 		Vertex v3 = mesh.Vertices[mesh.Indices[i + 2]];
 
-		XMFLOAT3 pt1 = Project(v1.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt2 = Project(v2.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt3 = Project(v3.position, viewMatrix, projectMatrix);
+		Project(v1.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(Point(static_cast<unsigned int>(pt1.x), static_cast<unsigned int>(pt1.y), pt1.z, v1.color),
-			Point(static_cast<unsigned int>(pt2.x), static_cast<unsigned int>(pt2.y), pt2.z, v2.color),
-			Point(static_cast<unsigned int>(pt3.x), static_cast<unsigned int>(pt3.y), pt3.z, v3.color));
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
-void Rasterizer::RenderX(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix)
+void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
 	for (int i = 6; i < 12; i += 3)
 	{
@@ -336,17 +355,15 @@ void Rasterizer::RenderX(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, Direc
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
 		Vertex v3 = mesh.Vertices[mesh.Indices[i + 2]];
 
-		XMFLOAT3 pt1 = Project(v1.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt2 = Project(v2.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt3 = Project(v3.position, viewMatrix, projectMatrix);
+		Project(v1.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(Point(pt1.x, pt1.y, pt1.z, v1.color),
-			Point(pt2.x, pt2.y, pt2.z, v2.color),
-			Point(pt3.x, pt3.y, pt3.z, v3.color));
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
-void Rasterizer::RenderZ(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix)
+void XM_CALLCONV Rasterizer::RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
 	for (int i = 30; i < 36; i += 3)
 	{
@@ -354,17 +371,15 @@ void Rasterizer::RenderZ(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, Direc
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
 		Vertex v3 = mesh.Vertices[mesh.Indices[i + 2]];
 
-		XMFLOAT3 pt1 = Project(v1.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt2 = Project(v2.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt3 = Project(v3.position, viewMatrix, projectMatrix);
+		Project(v1.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(Point(pt1.x, pt1.y, pt1.z, v1.color),
-			Point(pt2.x, pt2.y, pt2.z, v2.color),
-			Point(pt3.x, pt3.y, pt3.z, v3.color));
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
-void Rasterizer::RenderY(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectMatrix)
+void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
 	for (int i = 18; i < 23; i += 3)
 	{
@@ -372,12 +387,10 @@ void Rasterizer::RenderY(const Mesh& mesh, DirectX::XMFLOAT4X4 viewMatrix, Direc
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
 		Vertex v3 = mesh.Vertices[mesh.Indices[i + 2]];
 
-		XMFLOAT3 pt1 = Project(v1.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt2 = Project(v2.position, viewMatrix, projectMatrix);
-		XMFLOAT3 pt3 = Project(v3.position, viewMatrix, projectMatrix);
+		Project(v1.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
+		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(Point(pt1.x, pt1.y, pt1.z, v1.color),
-			Point(pt2.x, pt2.y, pt2.z, v2.color),
-			Point(pt3.x, pt3.y, pt3.z, v3.color));
+		DrawTriangle(v1, v2, v3);
 	}
 }
