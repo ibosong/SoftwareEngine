@@ -21,6 +21,7 @@ namespace GameEngine
 		Rasterizer m_rasterizer;
 		byte* m_buffer;
 		Mesh m_cube;
+		Texture m_texture;
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
 		void OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
 		Windows::Foundation::EventRegistrationToken m_pointerMoveToken;

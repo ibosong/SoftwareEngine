@@ -1,5 +1,6 @@
 #pragma once
-#include "Point.h"
+
+#include "Texture.h"
 #include "Mesh.h"
 #include "directxmath.h"
 namespace GameEngine
@@ -14,9 +15,9 @@ namespace GameEngine
 		void SetPixel(unsigned int x, unsigned int y, double z, const Color &color);
 		void Clear();
 
-		void DrawLine(const Vertex &v1, const Vertex &v2);
+		void DrawLine(const Vertex &v1, const Vertex &v2, Texture texture);
 		void Paint(const Color & color);
-		void DrawTriangle(Vertex v1, Vertex v2, Vertex v3);
+		void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture);
 
 		void XM_CALLCONV RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 

@@ -6,8 +6,8 @@ namespace GameEngine
 	{
 	public:
 		Texture();
-		Texture(Platform::String^ filename, int width, int height);
-		void Load(Platform::String^ filename, int width, int height);
+		Texture(int width, int height);
+		Concurrency::task<void> Load(Platform::String^ filename);
 		GameEngine::Color Map(float u, float v);
 	private:
 		byte* m_buffer;

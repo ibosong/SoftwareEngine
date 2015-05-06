@@ -15,18 +15,19 @@ Texture::Texture()
 
 }
 
-Texture::Texture(String^ filename, int width, int height) : m_width(width), m_height(height)
+Texture::Texture(int width, int height) : m_width(width), m_height(height), m_buffer(nullptr)
 {
-	Load(filename, width, height);
+
 }
 
-void Texture::Load(String^ filename, int width, int height)
+task<void> Texture::Load(String^ filename)
 {
-	create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync(filename))
+	return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync(filename))
 		.then([](StorageFile^ file){
 		return file->OpenAsync(FileAccessMode::Read);
-	}).then([=](IRandomAccessStream^ stream){
-		auto bitmap = ref new WriteableBitmap(width, height);
+	}).then([ this](IRandomAccessStream^ stream){
+		
+		WriteableBitmap^ bitmap = ref new WriteableBitmap(m_width, m_height);
 		bitmap->SetSource(stream);
 
 		// Query the IBufferByteAccess interface.
@@ -34,11 +35,13 @@ void Texture::Load(String^ filename, int width, int height)
 		reinterpret_cast<IInspectable*>(bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
 
 		// Retrieve the buffer data.
-		HRESULT hr = bufferByteAccess->Buffer(&m_buffer);
+		byte* buffer = nullptr;
+		HRESULT hr = bufferByteAccess->Buffer(&buffer);
 		if (FAILED(hr))
 		{
 			throw Exception::CreateException(hr);
 		}
+		m_buffer = buffer;
 	}).then([](task<void> t){
 		try
 		{
@@ -68,4 +71,5 @@ Color Texture::Map(float u, float v)
 	byte A = m_buffer[pos + 3];
 
 	return Color(R / 255.f, G / 255.f, B / 255.f, A / 255.f);
+	
 }

@@ -24,6 +24,7 @@ namespace GameEngine
 		Color operator + (const Color &c) const;
 		Color operator - (const Color &c) const;
 		Color operator * (float f) const;
+		Color operator * (const Color &c) const;
 	};
 
 }

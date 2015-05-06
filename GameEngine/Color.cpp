@@ -24,20 +24,22 @@ ByteColor Color::ToByte() const
 	return ByteColor((byte)(255 * R), (byte)(255 * G), (byte)(255 * B), (byte)(255 * A));
 }
 
-Color
-Color::operator + (const Color &c) const
+Color Color::operator + (const Color &c) const
 {
 	return Color(R + c.R, G + c.G, B + c.B, A + c.A);
 }
 
-Color
-Color::operator - (const Color &c) const
+Color Color::operator - (const Color &c) const
 {
 	return Color(R - c.R, G - c.G, B - c.B, A - c.A);
 }
 
-Color
-Color::operator * (float f) const
+Color Color::operator * (float f) const
 {
 	return Color(R * f, G * f, B * f, A * f);
+}
+
+Color Color::operator* (const Color &c) const
+{
+	return Color(R * c.R, G * c.G, B * c.B, A * c.A);
 }

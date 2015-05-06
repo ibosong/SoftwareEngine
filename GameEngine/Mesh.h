@@ -21,7 +21,7 @@ namespace GameEngine
 	{
 	public:
 		Mesh();
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned short> indices, Texture texture);
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned short>& indices, const Texture& texture);
 		std::vector<Vertex>			Vertices;
 		std::vector<unsigned short> Indices;
 		Texture						texture;
