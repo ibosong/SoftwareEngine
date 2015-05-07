@@ -25,7 +25,7 @@ using namespace Windows::UI::Core;
 using namespace DirectX;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
+MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_texture()
 {
 	InitializeComponent();	
 	
@@ -94,11 +94,9 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 		20, 22, 23
 	};
 
-	m_texture = Texture(m_pixelWidth, m_pixelHeight);
 	m_texture.Load("image.jpg").then([=](){
 		m_cube = Mesh(vertices, cubeIndices, m_texture);
 	});
-	//tex.Load("image.jpg");
 	
 
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));

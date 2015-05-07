@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Texture.h"
-
 #include "Robuffer.h"
 
 using namespace GameEngine;
@@ -10,22 +9,23 @@ using namespace Windows::Storage::Streams;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Platform;
 
-Texture::Texture()
+Texture::Texture() : m_buffer(nullptr)
 {
 
 }
 
-Texture::Texture(int width, int height) : m_width(width), m_height(height), m_buffer(nullptr)
-{
-
-}
 
 task<void> Texture::Load(String^ filename)
 {
 	return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync(filename))
-		.then([](StorageFile^ file){
-		return file->OpenAsync(FileAccessMode::Read);
-	}).then([ this](IRandomAccessStream^ stream){
+		.then([this](StorageFile^ file){
+		return create_task(file->Properties->GetImagePropertiesAsync()).then([this, file](FileProperties::ImageProperties^ prop){
+			m_width = prop->Width;
+			m_height = prop->Height;
+			return file->OpenAsync(FileAccessMode::Read);
+		});
+		
+	}).then([this](IRandomAccessStream^ stream){
 		
 		WriteableBitmap^ bitmap = ref new WriteableBitmap(m_width, m_height);
 		bitmap->SetSource(stream);
@@ -41,7 +41,10 @@ task<void> Texture::Load(String^ filename)
 		{
 			throw Exception::CreateException(hr);
 		}
-		m_buffer = buffer;
+		// Copy the buffer's data to m_buffer
+		m_buffer = new byte[m_width * m_height * 4];
+		std::memset(m_buffer, 0, m_width * m_height * 4);
+		std::memcpy(m_buffer, buffer, m_width * m_height * 4);
 	}).then([](task<void> t){
 		try
 		{
@@ -60,10 +63,10 @@ Color Texture::Map(float u, float v)
 	{
 		return Color();
 	}
-	unsigned int iu = std::abs(static_cast<int>(u * m_width) % m_width);
-	unsigned int iv = std::abs(static_cast<int>(v * m_height) % m_height);
+	unsigned int iu = std::abs(static_cast<int>(u * m_width) % (m_width + 1));
+	unsigned int iv = std::abs(static_cast<int>(v * m_height) % (m_height + 1));
 
-	int pos = static_cast<int>(u + v * m_width) * 4;
+	int pos = static_cast<int>(iu + iv * m_width) * 4;
 
 	byte B = m_buffer[pos];
 	byte G = m_buffer[pos + 1];

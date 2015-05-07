@@ -167,6 +167,7 @@
     <Image Include="image.jpg">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </Image>
+    <Image Include="green.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.xaml.cpp">
