@@ -14,8 +14,9 @@
       - Z-buffer
   2. Perspective project 3D cube to screen space. 
       - Book [Introduction to 3D Game Programming with DirectX 11](http://www.amazon.com/Introduction-3D-Game-Programming-DirectX/dp/1936420228/ref=sr_1_1?ie=UTF8&qid=1429889599&sr=8-1) Chapter 5
+  3. Texture map
+     - [Tutorial part 6: learning how to write a 3D software engine in C#, TS or JS – Texture mapping, back-face culling & WebGL](http://blogs.msdn.com/b/davrous/archive/2013/07/18/tutorial-part-6-learning-how-to-write-a-3d-software-engine-in-c-ts-or-js-texture-mapping-back-face-culling-amp-webgl.aspx)
 
 ### To Do
   1. Light
-  2. Texture
-  ...
+  2. ...
