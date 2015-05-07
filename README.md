@@ -1,5 +1,5 @@
 # SoftwareEngine
-## A software game engine in Windows Store app.
+## A software 3D rendering engine in Windows Store app.
 
 ### Introduction
   I was becoming interested in computer graphic since I studied DirectX in 2013. I've ever implemented a simple Particle System, the effect of the particles amazed me. It is so wonderful when I control the pixels in my own hands. When I was learning in the university, the math/physics knowledge make me curious since the teacher said it's useful for the future life. But I think it's useless in the daily life until I learned DirectX.
