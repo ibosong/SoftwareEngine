@@ -19,4 +19,6 @@
 
 ### To Do
   1. Light
-  2. ...
+  2. Back-face culling
+  3. Load model
+  4. ...
