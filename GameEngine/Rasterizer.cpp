@@ -391,7 +391,7 @@ void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX wor
 
 void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
-	for (int i = 6; i < 12; i += 3)
+	for (int i = 24; i < 30; i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
@@ -407,7 +407,7 @@ void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldM
 
 void XM_CALLCONV Rasterizer::RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
-	for (int i = 30; i < 36; i += 3)
+	for (int i = 0; i < 6; i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
@@ -423,7 +423,7 @@ void XM_CALLCONV Rasterizer::RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldM
 
 void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
-	for (int i = 18; i < 23; i += 3)
+	for (int i = 12; i < 18; i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];

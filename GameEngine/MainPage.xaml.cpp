@@ -222,7 +222,7 @@ void MainPage::Border_PointerReleased(Platform::Object^ sender, Windows::UI::Xam
 
 void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderZ(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -231,7 +231,7 @@ void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI:
 void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
-	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderX(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -239,7 +239,7 @@ void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI:
 
 void GameEngine::MainPage::Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderY(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
