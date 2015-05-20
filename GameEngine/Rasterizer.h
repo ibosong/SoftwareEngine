@@ -15,9 +15,9 @@ namespace GameEngine
 		void SetPixel(unsigned int x, unsigned int y, double z, const Color &color);
 		void Clear();
 
-		void DrawLine(const Vertex &v1, const Vertex &v2, Texture texture);
+		void DrawLine(const Vertex &v1, const Vertex &v2);
 		void Paint(const Color & color);
-		void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture);
+		void DrawTriangle(Vertex v1, Vertex v2, Vertex v3);
 
 		void XM_CALLCONV RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
@@ -32,10 +32,17 @@ namespace GameEngine
 		void SortTrianglePoints(Vertex &pt1, Vertex &pt2, Vertex &pt3);
 		// Project vertex to screen space
 		void XM_CALLCONV Project(DirectX::XMFLOAT3& coord, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
+
+		inline void SetTexture(const Texture& texture) { m_texture = std::make_shared<Texture>(texture); }
+
+
 		byte* m_buffer;
 		unsigned int m_pixelWidth;
 		unsigned int m_pixelHeight;
 		std::vector<double> zbuffer;
+
+		std::shared_ptr<Texture> m_texture;
+
 	};
 
 }

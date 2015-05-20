@@ -25,7 +25,7 @@ using namespace Windows::UI::Core;
 using namespace DirectX;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_texture()
+MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 {
 	InitializeComponent();	
 	
@@ -35,37 +35,35 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_texture()
 
 	std::vector<Vertex> vertices = {
 			// +z face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 0.f),  XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(1.f, 0.f, 0.f),   XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), Color(1.f, 0.f, 0.f),  XMFLOAT2(1.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 1.f)),
 			// -z face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), Color(1.f, 1.f, 0.f),  XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), Color(1.f, 1.f, 0.f),   XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(1.f, 1.f, 0.f),  XMFLOAT2(1.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f)),
 			// +y face
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), Color(0.f, 1.f, 0.f),  XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 0.f),   XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 0.f),    XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), Color(0.f, 1.f, 0.f),   XMFLOAT2(1.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f)),
 			// -y face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(1.f, 0.f, 1.f),  XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 1.f),   XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(1.f, 0.f, 1.f),  XMFLOAT2(1.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f)),
 			// -x face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), Color(0.f, 0.f, 1.f),  XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f,  0.3f), Color(0.f, 0.f, 1.f),  XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(-0.3f,  0.3f, -0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f)),
 			// +x face
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f,  -0.3f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), Color(0.f, 1.f, 1.f),   XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), Color(0.f, 1.f, 1.f),  XMFLOAT2(1.f, 1.f)),
-			
-			
+			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f)),
+			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f)),
+			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f)),
 	};
 
 	std::vector<unsigned short> cubeIndices = {
@@ -94,10 +92,9 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_texture()
 		20, 22, 23
 	};
 
-	m_texture.Load("image.jpg").then([=](){
-		m_cube = Mesh(vertices, cubeIndices, m_texture);
+	Texture::Load("image.jpg").then([this, vertices, cubeIndices](std::shared_ptr<Texture> texture){
+		m_cube = Mesh(vertices, cubeIndices, texture);
 	});
-	
 
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));
 	float aspectRatio = outputSize.Width / outputSize.Height;

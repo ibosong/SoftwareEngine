@@ -84,7 +84,7 @@ void Rasterizer::Paint(const Color &color)
 	}
 }
 
-void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
+void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2)
 {
 	// Copy the parameters.
 	int x1 = static_cast<int>(v1.position.x);
@@ -98,10 +98,17 @@ void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
 
 	Color color1 = v1.color;
 	Color color2 = v2.color;
+
+	Color color = color1;
+	Color textureColor = Color();
 	
 	if (x1 == x2 && y1 == y2)
 	{
-		SetPixel(x1, y1, z1, /*color1 * */texture.Map(v1.texCoor.x, v1.texCoor.y));
+		if (m_texture != nullptr)
+		{
+			textureColor = m_texture->Map(v1.texCoor.x, v1.texCoor.y);
+		}
+		SetPixel(x1, y1, z1, color * textureColor);
 		return;
 	}
 	
@@ -118,16 +125,20 @@ void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
 		Color colorStep = (color2 - color1) * (1.f / (y2 - y1));
 		XMFLOAT2 texCoorStep = XMFLOAT2((texCoor2.x - texCoor1.x) / (y2 - y1),
 			(texCoor2.y - texCoor1.y) / (y2 - y1));
-		Color tempColor = color1;
+		color = color1;
 		XMFLOAT2 tempTexCoor = texCoor1;
 		
 		double zstep = (z2 - z1) * (1.f / (y2 - y1));
 		double z = z1;
 		for (int i = y1; i < y2; ++i)
 		{
-			Color textureColor = texture.Map(tempTexCoor.x, tempTexCoor.y);
-			SetPixel(x1, i, z,  textureColor);
-			tempColor = tempColor + colorStep;
+			if (m_texture != nullptr)
+			{
+				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+			}
+
+			SetPixel(x1, i, z, color * textureColor);
+			color = color + colorStep;
 			tempTexCoor = XMFLOAT2(tempTexCoor.x + texCoorStep.x, tempTexCoor.y + texCoorStep.y);
 			z += zstep;
 		}
@@ -145,16 +156,20 @@ void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
 		Color colorStep = (color2 - color1) * (1.f / (x2 - x1));
 		XMFLOAT2 texCoorStep = XMFLOAT2((texCoor2.x - texCoor1.x) / (x2 - x1),
 			(texCoor2.y - texCoor1.y) / (x2 - x1));
-		Color tempColor = color1;
+		color = color1;
 		XMFLOAT2 tempTexCoor = texCoor1;
 
 		double zstep = (z2 - z1) * (1.f / (x2 - x1));
 		double z = z1;
 		for (int i = x1; i < x2; ++i)
 		{
-			Color textureColor = texture.Map(tempTexCoor.x, tempTexCoor.y);
-			SetPixel(i, y1, z,  textureColor);
-			tempColor = tempColor + colorStep;
+			if (m_texture != nullptr)
+			{
+				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+			}
+
+			SetPixel(i, y1, z, color * textureColor);
+			color = color + colorStep;
 			tempTexCoor = XMFLOAT2(tempTexCoor.x + texCoorStep.x, tempTexCoor.y + texCoorStep.y);
 			z += zstep;
 		}
@@ -204,12 +219,16 @@ void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
 		Color colorStep = (color2 - color1) * (1.f / (x2 - x1));
 		XMFLOAT2 texCoorStep = XMFLOAT2((texCoor2.x - texCoor1.x) / (x2 - x1),
 			(texCoor2.y - texCoor1.y) / (x2 - x1));
-		Color tempColor = color1;
+		color = color1;
 		XMFLOAT2 tempTexCoor = texCoor1;
 		double z = z1;
 		for (int x = x1; x < x2; ++x)
 		{
-			Color textureColor = texture.Map(tempTexCoor.x, tempTexCoor.y);
+			if (m_texture != nullptr)
+			{
+				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+			}
+
 			z += zstep;
 			error += slope;
 			if (std::abs(error) > 0.5f)
@@ -219,21 +238,21 @@ void Rasterizer::DrawLine(const Vertex &v1, const Vertex &v2, Texture texture)
 			}
 			if (steep > 1)
 			{
-				SetPixel(y, x, z,  textureColor);
+				SetPixel(y, x, z, color * textureColor);
 			}
 			else
 			{
-				SetPixel(x, y, z,  textureColor);
+				SetPixel(x, y, z, color * textureColor);
 			}
 
-			tempColor = tempColor + colorStep;
+			color = color + colorStep;
 			tempTexCoor = XMFLOAT2(tempTexCoor.x + texCoorStep.x, tempTexCoor.y + texCoorStep.y);
 		}
 	}
 	
 }
 
-void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture)
+void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3)
 {
 	// Make sure that v1.position.y < v2.position.y < v3.position.y
 	SortTrianglePoints(v1, v2, v3);
@@ -258,6 +277,14 @@ void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture)
 	double zinvslope13 = 0.f;
 	XMFLOAT2 texCoorStep13 = XMFLOAT2();
 	XMFLOAT2 texCoorStep12 = XMFLOAT2();
+
+	XMFLOAT3 normal1, normal2;
+
+	normal1 = XMFLOAT3((v1.normal.x + v2.normal.x + v3.normal.x) / 3,
+		(v1.normal.y + v2.normal.y + v3.normal.y) / 3,
+		(v1.normal.z + v2.normal.z + v3.normal.z) / 3);
+	normal2 = normal1;
+
 	// Divide the triangle into 2 parts
 	if (y3 - y1 != 0 )
 	{
@@ -285,7 +312,7 @@ void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture)
 
 			XMFLOAT2 texCoor4(texCoorStep13.x * (y4 - y1), texCoorStep13.y * (y4 - y1));
 
-			Vertex v4(XMFLOAT3(x4, y4, z4), colorStep13 * (y4 - y1), texCoor4);
+			Vertex v4(XMFLOAT3(x4, y4, z4), normal1, colorStep13 * (y4 - y1), texCoor4);
 
 			float xdiff12 = static_cast<float>(x2 - x1);
 			float ydiff12 = static_cast<float>(y2 - y1);
@@ -306,8 +333,8 @@ void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture)
 			XMFLOAT2 texCoor12 = v1.texCoor;
 			for (int i = y1; i < y2; ++i)
 			{
-				DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, (float)scanZ1), color12, texCoor12),
-					Vertex(XMFLOAT3(scanX2, (float)i, (float)scanZ2), color14, texCoor14), texture);
+				DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, (float)scanZ1), normal1, color12, texCoor12),
+					Vertex(XMFLOAT3(scanX2, (float)i, (float)scanZ2), normal2, color14, texCoor14));
 				scanX1 += invslope12;
 				scanX2 += invslope13;
 				scanZ1 += zinvslope12;
@@ -346,8 +373,8 @@ void Rasterizer::DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Texture texture)
 			XMFLOAT2 texCoor32 = v3.texCoor;
 			for (int i = y3; i > y2 - 1; --i)
 			{
-				DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, (float)scanZ1), color32, texCoor32),
-					Vertex(XMFLOAT3(scanX2, (float)i, (float)scanZ2), color34, texCoor34), texture);
+				DrawLine(Vertex(XMFLOAT3(scanX1, (float)i, (float)scanZ1), normal1, color32, texCoor32),
+					Vertex(XMFLOAT3(scanX2, (float)i, (float)scanZ2), normal2, color34, texCoor34));
 				scanX1 -= invslop32;
 				scanX2 -= invslope13;
 				scanZ1 -= zinvslop32;
@@ -385,7 +412,7 @@ void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX wor
 		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
 		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(v1, v2, v3, mesh.texture);
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
@@ -401,7 +428,7 @@ void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
 		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(v1, v2, v3, mesh.texture);
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
@@ -417,12 +444,13 @@ void XM_CALLCONV Rasterizer::RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
 		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(v1, v2, v3, mesh.texture);
+		DrawTriangle(v1, v2, v3);
 	}
 }
 
 void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
+	SetTexture(*mesh.texture);
 	for (int i = 12; i < 18; i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
@@ -433,6 +461,9 @@ void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Project(v2.position, worldMatrix, viewMatrix, projectMatrix);
 		Project(v3.position, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(v1, v2, v3, mesh.texture);
+		
+
+		DrawTriangle(v1, v2, v3);
 	}
+	m_texture.reset();
 }

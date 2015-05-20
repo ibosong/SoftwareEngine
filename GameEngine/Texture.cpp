@@ -9,52 +9,47 @@ using namespace Windows::Storage::Streams;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Platform;
 
-Texture::Texture() : m_buffer(nullptr)
-{
+byte* Texture::static_buffer = nullptr;
 
+task<std::shared_ptr<Texture>> Texture::Load(String^ filename)
+{	
+	return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync(filename))
+		.then([&](StorageFile^ file){
+		return create_task(file->OpenAsync(FileAccessMode::Read)).then([=](IRandomAccessStream^ stream){
+			return create_task(file->Properties->GetImagePropertiesAsync()).then([=](FileProperties::ImageProperties^ prop){
+				unsigned int width = prop->Width;
+				unsigned int height = prop->Height;
+				WriteableBitmap^ bitmap = ref new WriteableBitmap(width, height);
+				bitmap->SetSource(stream);
+
+				// Query the IBufferByteAccess interface.
+				Microsoft::WRL::ComPtr<IBufferByteAccess> bufferByteAccess;
+				reinterpret_cast<IInspectable*>(bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
+
+				// Retrieve the buffer data.
+				byte* buffer = nullptr;
+				HRESULT hr = bufferByteAccess->Buffer(&buffer);
+				if (FAILED(hr))
+				{
+					throw Exception::CreateException(hr);
+				}
+				// Copy the buffer's data to static_buffer
+				static_buffer = new byte[width * height * 4];
+				std::memset(static_buffer, 0, width * height * 4);
+				std::memcpy(static_buffer, buffer, width * height * 4);
+				return std::make_shared<Texture>(Texture(static_buffer, width, height));
+			});
+		});
+		
+
+	});
 }
 
 
-task<void> Texture::Load(String^ filename)
+
+Texture::Texture(byte* buffer, int width, int height) : m_buffer(buffer), m_width(width), m_height(height)
 {
-	return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync(filename))
-		.then([this](StorageFile^ file){
-		return create_task(file->Properties->GetImagePropertiesAsync()).then([this, file](FileProperties::ImageProperties^ prop){
-			m_width = prop->Width;
-			m_height = prop->Height;
-			return file->OpenAsync(FileAccessMode::Read);
-		});
-		
-	}).then([this](IRandomAccessStream^ stream){
-		
-		WriteableBitmap^ bitmap = ref new WriteableBitmap(m_width, m_height);
-		bitmap->SetSource(stream);
 
-		// Query the IBufferByteAccess interface.
-		Microsoft::WRL::ComPtr<IBufferByteAccess> bufferByteAccess;
-		reinterpret_cast<IInspectable*>(bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
-
-		// Retrieve the buffer data.
-		byte* buffer = nullptr;
-		HRESULT hr = bufferByteAccess->Buffer(&buffer);
-		if (FAILED(hr))
-		{
-			throw Exception::CreateException(hr);
-		}
-		// Copy the buffer's data to m_buffer
-		m_buffer = new byte[m_width * m_height * 4];
-		std::memset(m_buffer, 0, m_width * m_height * 4);
-		std::memcpy(m_buffer, buffer, m_width * m_height * 4);
-	}).then([](task<void> t){
-		try
-		{
-			t.get();
-		}
-		catch (Exception^ e)
-		{
-
-		}
-	});
 }
 
 Color Texture::Map(float u, float v)
