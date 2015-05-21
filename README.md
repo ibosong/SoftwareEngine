@@ -6,6 +6,9 @@
   
   I decided to write this project when I saw that many gurus in CG suggested implementing the software engine to understand the piplines excuted in the GPU.  So this project is for educational purpose and it's still on the way.
   
+### Platform
+  Windows 8.1, Visual Studio 2013
+  
 ### Done
   1. Rasterize line, triangle.
       - [Bresenham's line algorithm](http://en.wikipedia.org/wiki/Bresenham's_line_algorithm)
