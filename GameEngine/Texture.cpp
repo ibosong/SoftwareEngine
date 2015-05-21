@@ -9,7 +9,6 @@ using namespace Windows::Storage::Streams;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Platform;
 
-byte* Texture::static_buffer = nullptr;
 
 task<std::shared_ptr<Texture>> Texture::Load(String^ filename)
 {	
@@ -27,21 +26,16 @@ task<std::shared_ptr<Texture>> Texture::Load(String^ filename)
 				reinterpret_cast<IInspectable*>(bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
 
 				// Retrieve the buffer data.
-				byte* buffer = nullptr;
+				byte* buffer = new byte[width * height * 4];
 				HRESULT hr = bufferByteAccess->Buffer(&buffer);
 				if (FAILED(hr))
 				{
 					throw Exception::CreateException(hr);
 				}
-				// Copy the buffer's data to static_buffer
-				static_buffer = new byte[width * height * 4];
-				std::memset(static_buffer, 0, width * height * 4);
-				std::memcpy(static_buffer, buffer, width * height * 4);
-				return std::make_shared<Texture>(Texture(static_buffer, width, height));
+
+				return std::make_shared<Texture>(Texture(buffer, width, height));
 			});
 		});
-		
-
 	});
 }
 

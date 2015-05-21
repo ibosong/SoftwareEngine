@@ -1,15 +1,18 @@
 #pragma once
 #include "Color.h"
+#include "directxmath.h"
 namespace GameEngine
 {
-	class Point
+	struct Point
 	{
-	public:
-		Point(unsigned int x, unsigned int y, double depth, Color color);
-		unsigned int x;
-		unsigned int y;
+		// x, y are in the screen space, z represents the point's depth value
+		DirectX::XMFLOAT3 screenPos;
+
+		float lightIntensity;
+
+		DirectX::XMFLOAT2 texCoord;
+
 		Color color;
-		double depth;
 	};
 
 }

@@ -36,7 +36,7 @@ Color Color::operator - (const Color &c) const
 
 Color Color::operator * (float f) const
 {
-	return Color(R * f, G * f, B * f, A * f);
+	return Color(R * f, G * f, B * f, A);
 }
 
 Color Color::operator* (const Color &c) const

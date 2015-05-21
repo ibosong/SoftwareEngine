@@ -7,6 +7,7 @@
 #include "MainPage.xaml.h"
 #include "Robuffer.h"
 #include "Point.h"
+
 using namespace GameEngine;
 
 using namespace Platform;
@@ -29,41 +30,41 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 {
 	InitializeComponent();	
 	
-	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
+	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
 	
 	
 
 	std::vector<Vertex> vertices = {
-			// +z face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 1.f)),
-			// -z face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f)),
-			// +y face
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f)),
-			// -y face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f)),
-			// -x face
-			Vertex(XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f)),
-			// +x face
-			Vertex(XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f)),
-			Vertex(XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f)),
-			Vertex(XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f)),
+		// +z face
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		// -z face
+		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		// +y face
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		// -y face
+		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		// -x face
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		// +x face
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 	};
 
 	std::vector<unsigned short> cubeIndices = {
@@ -143,7 +144,8 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 	//rasterizer.DrawLine(Point(100, 10, Color(1, 0, 0)), Point(200, 10, Color(0, 0, 1)));
 	//Paint(Color(1.f, 0.f, 0.f, 1.f));
 	//
-
+	Light light = Light(XMFLOAT3(10.f, 12.f, 12.f));
+	m_rasterizer.SetLight(light);
 
 	imageRendering->Source = m_bitmap;
 }
@@ -219,7 +221,8 @@ void MainPage::Border_PointerReleased(Platform::Object^ sender, Windows::UI::Xam
 
 void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_rasterizer.RenderZ(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
+	//m_rasterizer.SetTexture(*m_cube.texture);
+	m_rasterizer.RenderZ(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -228,7 +231,7 @@ void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI:
 void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
-	m_rasterizer.RenderX(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderX(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
@@ -236,7 +239,7 @@ void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI:
 
 void GameEngine::MainPage::Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_rasterizer.RenderY(m_cube, XMMatrixRotationY(0.5f), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderY(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }

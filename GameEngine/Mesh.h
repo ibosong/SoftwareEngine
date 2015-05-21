@@ -6,16 +6,11 @@ namespace GameEngine
 {
 	struct Vertex
 	{
-		Vertex(DirectX::XMFLOAT3 pos,DirectX::XMFLOAT3 normal, GameEngine::Color color, DirectX::XMFLOAT2 textureCoor) :
-			position(pos), normal(normal), color(color), texCoor(textureCoor), depth(pos.z)
-		{
-
-		}
+		// Data in 3D space
 		DirectX::XMFLOAT3	position;
 		DirectX::XMFLOAT3	normal;
 		GameEngine::Color	color;
-		DirectX::XMFLOAT2	texCoor;
-		float				depth;
+		DirectX::XMFLOAT2	texCoord;
 	};
 
 	class Mesh
