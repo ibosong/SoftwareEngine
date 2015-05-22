@@ -13,11 +13,9 @@ namespace GameEngine
 		DirectX::XMFLOAT2	texCoord;
 	};
 
-	class Mesh
+	struct Mesh
 	{
 	public:
-		Mesh();
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned short>& indices, std::shared_ptr<Texture> texture);
 		std::vector<Vertex>			Vertices;
 		std::vector<unsigned short> Indices;
 		std::shared_ptr<Texture>	texture;

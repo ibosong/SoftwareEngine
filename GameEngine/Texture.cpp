@@ -26,12 +26,16 @@ task<std::shared_ptr<Texture>> Texture::Load(String^ filename)
 				reinterpret_cast<IInspectable*>(bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
 
 				// Retrieve the buffer data.
-				byte* buffer = new byte[width * height * 4];
-				HRESULT hr = bufferByteAccess->Buffer(&buffer);
+				byte* tempBuffer = nullptr;
+				HRESULT hr = bufferByteAccess->Buffer(&tempBuffer);
 				if (FAILED(hr))
 				{
 					throw Exception::CreateException(hr);
 				}
+
+				byte* buffer = new byte[width * height * 4];
+				memset(buffer, 0, width * height * 4);
+				memcpy(buffer, tempBuffer, width * height * 4);
 
 				return std::make_shared<Texture>(Texture(buffer, width, height));
 			});

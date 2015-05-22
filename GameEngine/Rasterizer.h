@@ -14,10 +14,9 @@ namespace GameEngine
 
 		void Clear();
 
-		void DrawLine(const Point &p1, const Point &p2);
+		void DrawLine(const Point &p1, const Point &p2, Texture* texture);
 		void Paint(const Color & color);
-		void DrawTriangle(Point p1, Point p2, Point p3);
-		inline void SetTexture(const Texture& texture) { m_texture = std::make_shared<Texture>(texture); }
+		void DrawTriangle(Point p1, Point p2, Point p3, Texture* texture);
 		inline void SetLight(const Light& light){ m_light = std::make_shared<Light>(light); }
 
 		void XM_CALLCONV RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
@@ -42,8 +41,6 @@ namespace GameEngine
 		unsigned int m_pixelWidth;
 		unsigned int m_pixelHeight;
 		std::vector<double> zbuffer;
-
-		std::shared_ptr<Texture>	m_texture;
 		std::shared_ptr<Light>		m_light;
 	};
 

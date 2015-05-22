@@ -30,42 +30,77 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 {
 	InitializeComponent();	
 	
-	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
+	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
 	
 	
 
+	//std::vector<Vertex> vertices = {
+	//	// +z face
+	//	{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 1.f) },
+	//	// -z face
+	//	{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+	//	// +y face
+	//	{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+	//	// -y face
+	//	{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+	//	// -x face
+	//	{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+	//	// +x face
+	//	{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+	//	{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+	//	{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) }
+	//};
+	
+	// No colors
 	std::vector<Vertex> vertices = {
 		// +z face
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 0.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -z face
-		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// +y face
-		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(0.f, 1.f, 0.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -y face
 		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f),  Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f),   Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f),  Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -x face
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(0.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// +x face
-		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) }
 	};
+
 
 	std::vector<unsigned short> cubeIndices = {
 		// Front Face
@@ -94,7 +129,7 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 	};
 
 	Texture::Load("image.jpg").then([this, vertices, cubeIndices](std::shared_ptr<Texture> texture){
-		m_cube = Mesh(vertices, cubeIndices, texture);
+		m_cube = { vertices, cubeIndices, texture };
 	});
 
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));
@@ -154,6 +189,7 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 {
 	m_rasterizer.Clear();
+
 	static float angle = 0.f;
 	angle += 0.05f;
 	if (angle >= 3.14 * 2)
@@ -170,15 +206,7 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 
 void MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	/*m_rasterizer.DrawTriangle(Point(300, 300, -1.f, Color(1, 0, 0)), 
-		Point(100, 0, -1.f, Color(1, 0, 0)), Point(0, 100, -1.f, Color(1, 0, 0)));
-
-	m_rasterizer.DrawTriangle(Point(200, 0, 2.f, Color(0, 1, 0)),
-		Point(100, 0, 2.f, Color(0, 1, 0)), Point(0, 200, -4.f, Color(0, 1, 0)));
-
-
-	m_bitmap->Invalidate();*/
-
+	
 	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
@@ -221,7 +249,6 @@ void MainPage::Border_PointerReleased(Platform::Object^ sender, Windows::UI::Xam
 
 void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	//m_rasterizer.SetTexture(*m_cube.texture);
 	m_rasterizer.RenderZ(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();

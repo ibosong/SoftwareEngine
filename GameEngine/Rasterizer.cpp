@@ -110,7 +110,7 @@ void Rasterizer::Paint(const Color &color)
 	}
 }
 
-void Rasterizer::DrawLine(const Point &p1, const Point &p2)
+void Rasterizer::DrawLine(const Point &p1, const Point &p2, Texture* texture)
 {
 	// Copy the parameters.
 	int x1 = static_cast<int>(p1.screenPos.x);
@@ -133,9 +133,9 @@ void Rasterizer::DrawLine(const Point &p1, const Point &p2)
 	
 	if (x1 == x2 && y1 == y2)
 	{
-		if (m_texture != nullptr)
+		if (texture != nullptr)
 		{
-			textureColor = m_texture->Map(p1.texCoord.x, p1.texCoord.y);
+			textureColor = texture->Map(p1.texCoord.x, p1.texCoord.y);
 		}
 		if (m_light != nullptr)
 		{
@@ -168,9 +168,9 @@ void Rasterizer::DrawLine(const Point &p1, const Point &p2)
 		double z = z1;
 		for (int i = y1; i < y2; ++i)
 		{
-			if (m_texture != nullptr)
+			if (texture != nullptr)
 			{
-				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+				textureColor = texture->Map(tempTexCoor.x, tempTexCoor.y);
 			}
 			SetPixel(x1, i, z, color * textureColor * dotLightIntensity);
 			color = color + colorStep;
@@ -205,9 +205,9 @@ void Rasterizer::DrawLine(const Point &p1, const Point &p2)
 		double z = z1;
 		for (int i = x1; i < x2; ++i)
 		{
-			if (m_texture != nullptr)
+			if (texture != nullptr)
 			{
-				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+				textureColor = texture->Map(tempTexCoor.x, tempTexCoor.y);
 			}
 
 			SetPixel(i, y1, z, color * textureColor * dotLightIntensity);
@@ -273,9 +273,9 @@ void Rasterizer::DrawLine(const Point &p1, const Point &p2)
 		double z = z1;
 		for (int x = x1; x < x2; ++x)
 		{
-			if (m_texture != nullptr)
+			if (texture != nullptr)
 			{
-				textureColor = m_texture->Map(tempTexCoor.x, tempTexCoor.y);
+				textureColor = texture->Map(tempTexCoor.x, tempTexCoor.y);
 			}
 
 			z += zstep;
@@ -306,7 +306,7 @@ void Rasterizer::DrawLine(const Point &p1, const Point &p2)
 	
 }
 
-void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3)
+void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3, Texture* texture)
 {
 	// Make sure that p1.screenPos.y < p2.screenPos.y < p3.screenPos.y
 	SortTrianglePoints(p1, p2, p3);
@@ -339,7 +339,6 @@ void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3)
 	float invslope13 = 0.f;
 	double depthInvslope12 = 0.f;
 	double depthInvslope13 = 0.f;
-
 
 
 	// Divide the triangle into 2 parts
@@ -392,7 +391,7 @@ void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3)
 			{
 				Point lineStart = { XMFLOAT3(scanX1, (float)i, (float)scanZ1), light12, texCoord12, color12 };
 				Point lineEnd = { XMFLOAT3(scanX2, (float)i, (float)scanZ2), light14, texCoord14, color14 };
-				DrawLine(lineStart, lineEnd);
+				DrawLine(lineStart, lineEnd, texture);
 
 				scanX1 += invslope12;
 				scanX2 += invslope13;
@@ -441,7 +440,7 @@ void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3)
 			{
 				Point lineStart = { XMFLOAT3(scanX1, (float)i, (float)scanZ1), light32, texCoor32, color32 };
 				Point lineEnd = { XMFLOAT3(scanX2, (float)i, (float)scanZ2), light34, texCoor34, color34 };
-				DrawLine(lineStart, lineEnd);
+				DrawLine(lineStart, lineEnd, texture);
 
 				scanX1 -= invslop23;
 				scanX2 -= invslope13;
@@ -482,7 +481,7 @@ void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX wor
 		Point p2 = Project(v2, worldMatrix, viewMatrix, projectMatrix);
 		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(p1, p2, p3);
+		DrawTriangle(p1, p2, p3, mesh.texture.get());
 	}
 }
 
@@ -498,7 +497,7 @@ void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Point p2 = Project(v2, worldMatrix, viewMatrix, projectMatrix);
 		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(p1, p2, p3);
+		DrawTriangle(p1, p2, p3, mesh.texture.get());
 	}
 }
 
@@ -514,13 +513,12 @@ void XM_CALLCONV Rasterizer::RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Point p2 = Project(v2, worldMatrix, viewMatrix, projectMatrix);
 		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(p1, p2, p3);
+		DrawTriangle(p1, p2, p3, mesh.texture.get());
 	}
 }
 
 void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
-
 	for (int i = 12; i < 18; i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
@@ -530,6 +528,6 @@ void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		Point p2 = Project(v2, worldMatrix, viewMatrix, projectMatrix);
 		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
 
-		DrawTriangle(p1, p2, p3);
+		DrawTriangle(p1, p2, p3, mesh.texture.get());
 	}
 }
