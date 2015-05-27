@@ -30,7 +30,7 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
 {
 	InitializeComponent();	
 	
-	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
+	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
 	
 	
 

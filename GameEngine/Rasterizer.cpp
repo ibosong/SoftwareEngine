@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Rasterizer.h"
 #include "algorithm"
+#include "ppl.h"
 using namespace DirectX;
 using namespace GameEngine;
 
@@ -387,6 +388,7 @@ void Rasterizer::DrawTriangle(Point p1, Point p2, Point p3, Texture* texture)
 			float light12 = p1.lightIntensity;
 			XMFLOAT2 texCoord14 = p1.texCoord;
 			XMFLOAT2 texCoord12 = p1.texCoord;
+			
 			for (int i = y1; i < y2; ++i)
 			{
 				Point lineStart = { XMFLOAT3(scanX1, (float)i, (float)scanZ1), light12, texCoord12, color12 };
@@ -471,7 +473,18 @@ void Rasterizer::SortTrianglePoints(Point &pt1, Point &pt2, Point &pt3)
 
 void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
 {
-	for (size_t i = 0; i < mesh.Indices.size(); i += 3)
+	concurrency::parallel_for(size_t(0), mesh.Indices.size(), size_t(3), [=](size_t i){
+		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
+		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
+		Vertex v3 = mesh.Vertices[mesh.Indices[i + 2]];
+
+		Point p1 = Project(v1, worldMatrix, viewMatrix, projectMatrix);
+		Point p2 = Project(v2, worldMatrix, viewMatrix, projectMatrix);
+		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
+
+		DrawTriangle(p1, p2, p3, mesh.texture.get());
+	});
+	/*for (size_t i = 0; i < mesh.Indices.size(); i += 3)
 	{
 		Vertex v1 = mesh.Vertices[mesh.Indices[i]];
 		Vertex v2 = mesh.Vertices[mesh.Indices[i + 1]];
@@ -482,7 +495,7 @@ void XM_CALLCONV Rasterizer::RenderMeth(const Mesh& mesh, DirectX::FXMMATRIX wor
 		Point p3 = Project(v3, worldMatrix, viewMatrix, projectMatrix);
 
 		DrawTriangle(p1, p2, p3, mesh.texture.get());
-	}
+	}*/
 }
 
 void XM_CALLCONV Rasterizer::RenderX(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
