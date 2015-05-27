@@ -132,6 +132,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BasicTimer.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />

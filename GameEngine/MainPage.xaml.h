@@ -8,6 +8,7 @@
 #include "MainPage.g.h"
 #include "Rasterizer.h"
 #include "DirectXMath.h"
+#include "BasicTimer.h"
 namespace GameEngine
 {
 
@@ -21,6 +22,8 @@ namespace GameEngine
 		Rasterizer m_rasterizer;
 		byte* m_buffer;
 		Mesh m_cube;
+
+		BasicTimer^ m_timer;
 		
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
 		void OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);

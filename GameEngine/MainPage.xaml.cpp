@@ -26,10 +26,10 @@ using namespace Windows::UI::Core;
 using namespace DirectX;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500)
+MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new BasicTimer)
 {
 	InitializeComponent();	
-	
+
 	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
 	
 	
@@ -202,6 +202,10 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 	m_rasterizer.RenderMeth(m_cube, world, m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
+
+	m_timer->Update();
+	if (m_timer->Delta > 0.f)
+		fpsTextBlock->Text =  (1.f / m_timer->Delta).ToString();
 }
 
 void MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)

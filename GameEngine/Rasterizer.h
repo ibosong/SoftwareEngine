@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Mesh.h"
 #include "Point.h"
+#include <mutex>
 namespace GameEngine
 {
 	class Rasterizer
@@ -42,6 +43,8 @@ namespace GameEngine
 		unsigned int m_pixelHeight;
 		std::vector<double> zbuffer;
 		std::shared_ptr<Light>		m_light;
+
+		std::mutex* m_mutexBuffer;
 	};
 
 }

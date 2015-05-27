@@ -17,6 +17,7 @@
         <Button Content="Render X" HorizontalAlignment="Left" Margin="804,247,0,0" VerticalAlignment="Top" Click="Button_Click_3"/>
         <Button Content="Render Z" HorizontalAlignment="Left" Margin="807,322,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
         <Button Content="Render Y" HorizontalAlignment="Left" Margin="810,398,0,0" VerticalAlignment="Top" Click="Button_Click_4"/>
+        <TextBlock x:Name="fpsTextBlock" HorizontalAlignment="Left" Margin="786,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="108" FontSize="18"/>
 
     </Grid>
 </Page>

@@ -15,6 +15,8 @@ void Rasterizer::SetFrameBuffer(byte* buffer, unsigned int width, unsigned int h
 	m_pixelWidth = width;
 	m_pixelHeight = height;
 	zbuffer = std::vector<double>(height * width, 1.0);
+
+	m_mutexBuffer = new std::mutex[width * height];
 }
 
 void Rasterizer::Clear()
@@ -29,6 +31,8 @@ void Rasterizer::SetPixel(unsigned int x, unsigned int y, const Color &color)
 		return;
 	ByteColor byteColor = color.ToByte();
 	
+	std::lock_guard<std::mutex> locker(m_mutexBuffer[y * m_pixelHeight + x]);
+
 	m_buffer[(y * m_pixelWidth + x) * 4] = byteColor.B;
 	m_buffer[(y * m_pixelWidth + x) * 4 + 1] = byteColor.G;
 	m_buffer[(y * m_pixelWidth + x) * 4 + 2] = byteColor.R;
