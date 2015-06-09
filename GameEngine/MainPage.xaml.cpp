@@ -24,15 +24,19 @@ using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Windows::Storage::Streams;
 using namespace Windows::UI::Core;
 using namespace DirectX;
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new BasicTimer)
+MainPage::MainPage() : m_pixelWidth(1000), m_pixelHeight(1000), m_timer(ref new BasicTimer)
 {
 	InitializeComponent();	
 
-	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);
-	
-	
+	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);	
+}
+
+
+void GameEngine::MainPage::Page_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	m_pixelWidth = this->ActualWidth;
+	m_pixelHeight = this->ActualHeight;
 
 	//std::vector<Vertex> vertices = {
 	//	// +z face
@@ -66,14 +70,14 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new Ba
 	//	{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
 	//	{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(0.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) }
 	//};
-	
+
 	// No colors
 	std::vector<Vertex> vertices = {
 		// +z face
 		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 0.f, 1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -z face
 		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
 		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
@@ -81,24 +85,24 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new Ba
 		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, 0.f, -1.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// +y face
 		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(0.f, 1.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -y face
 		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f),  Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f),   Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f),  Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(0.f, -1.f, 0.f), Color(1.f, 0.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// -x face
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(-0.3f, -0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, 0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(-0.3f, 0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
 		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT3(-1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) },
 		// +x face
 		{ XMFLOAT3(0.3f, -0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 0.f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f),   Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f),  Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) }
+		{ XMFLOAT3(0.3f, 0.3f, -0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(0.f, 1.f) },
+		{ XMFLOAT3(0.3f, 0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 0.f) },
+		{ XMFLOAT3(0.3f, -0.3f, 0.3f), XMFLOAT3(1.f, 0.f, 0.f), Color(1.f, 1.f, 1.f), XMFLOAT2(1.f, 1.f) }
 	};
 
 
@@ -129,7 +133,7 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new Ba
 	};
 
 	Texture::Load("image.jpg").then([this, vertices, cubeIndices](std::shared_ptr<Texture> texture){
-		m_cube = { vertices, cubeIndices, texture };
+		m_cube = { vertices, cubeIndices, nullptr };
 	});
 
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));
@@ -159,10 +163,10 @@ MainPage::MainPage() : m_pixelWidth(500), m_pixelHeight(500), m_timer(ref new Ba
 
 	//XMMATRIX transformMatrix = viewMatrix * perspectiveMatrix;
 
-	
+
 
 	m_bitmap = ref new WriteableBitmap(m_pixelWidth, m_pixelHeight);
-	
+
 	// Query the IBufferByteAccess interface.
 	Microsoft::WRL::ComPtr<IBufferByteAccess> bufferByteAccess;
 	reinterpret_cast<IInspectable*>(m_bitmap->PixelBuffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
@@ -202,13 +206,13 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 	m_rasterizer.RenderMeth(m_cube, world, m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
-
-	m_timer->Update();
 	if (m_timer->Delta > 0.f)
-		fpsTextBlock->Text =  (1.f / m_timer->Delta).ToString();
+		fpsTextBlock->Text = (1.f / m_timer->Delta).ToString();
+	m_timer->Update();
+
 }
 
-void MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void MainPage::btnDraw3D_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	
 	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
@@ -217,12 +221,13 @@ void MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedE
 }
 
 
-void MainPage::Button_Click_1(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void MainPage::btnClear_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	m_rasterizer.Clear();
 	
 	m_bitmap->Invalidate();
 }
+
 // Handle pointer moved event to rotate the view space martrix.
 void MainPage::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args)
 {
@@ -238,20 +243,8 @@ void MainPage::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI
 	m_bitmap->Invalidate();
 }
 
-void MainPage::Border_PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
-{
-	m_pointerMoveToken = Window::Current->CoreWindow->PointerMoved +=
-		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &MainPage::OnPointerMoved);
-}
 
-
-void MainPage::Border_PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
-{
-	Window::Current->CoreWindow->PointerMoved -= m_pointerMoveToken;
-}
-
-
-void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void MainPage::btnRenderZ_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	m_rasterizer.RenderZ(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
@@ -259,7 +252,7 @@ void GameEngine::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI:
 }
 
 
-void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void MainPage::btnRenderX_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
 	m_rasterizer.RenderX(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
@@ -268,9 +261,25 @@ void GameEngine::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI:
 }
 
 
-void GameEngine::MainPage::Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void MainPage::btnRenderY_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	m_rasterizer.RenderY(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
+}
+
+
+
+
+void MainPage::imageRendering_PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	m_pointerMoveToken = Window::Current->CoreWindow->PointerMoved +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &MainPage::OnPointerMoved);
+
+}
+
+
+void MainPage::imageRendering_PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	Window::Current->CoreWindow->PointerMoved -= m_pointerMoveToken;
 }

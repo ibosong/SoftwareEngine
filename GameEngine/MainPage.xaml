@@ -6,18 +6,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    RequestedTheme="Light">
+    RequestedTheme="Light" Loaded="Page_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border HorizontalAlignment="Left" Height="700" Margin="51,23,0,0" VerticalAlignment="Top" Width="700" BorderBrush="Black" BorderThickness="1" PointerPressed="Border_PointerPressed" PointerReleased="Border_PointerReleased">
-            <Image Name="imageRendering"/>
-        </Border>
-        <Button Content="Draw 2D Triangle" HorizontalAlignment="Left" Margin="919,137,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <Button Content="Clear" HorizontalAlignment="Left" Margin="937,82,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <Button Content="Render X" HorizontalAlignment="Left" Margin="804,247,0,0" VerticalAlignment="Top" Click="Button_Click_3"/>
-        <Button Content="Render Z" HorizontalAlignment="Left" Margin="807,322,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
-        <Button Content="Render Y" HorizontalAlignment="Left" Margin="810,398,0,0" VerticalAlignment="Top" Click="Button_Click_4"/>
-        <TextBlock x:Name="fpsTextBlock" HorizontalAlignment="Left" Margin="786,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="108" FontSize="18"/>
+        <Image Name="imageRendering" PointerPressed="imageRendering_PointerPressed" PointerReleased="imageRendering_PointerReleased" />
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10,30,0,0">
+                <Button Name="btnDraw3D" Content="Draw 3D Triangle" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnDraw3D_Click"/>
+                <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnClear_Click"/>
+                <Button Name="btnRenderX" Content="Render X" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnRenderX_Click"/>
+                <Button Name="btnRenderZ" Content="Render Z" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnRenderZ_Click"/>
+                <Button Name="btnRenderY" Content="Render Y" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnRenderY_Click"/>
+            </StackPanel>
+            <StackPanel Margin="10,10,0,0" Orientation="Horizontal">
+                <TextBlock FontSize="18">FPS: </TextBlock>
+                <TextBlock x:Name="fpsTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="18"/>
+            </StackPanel>
+        </StackPanel>
+        
+        
 
     </Grid>
 </Page>
