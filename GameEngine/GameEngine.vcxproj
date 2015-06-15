@@ -135,6 +135,7 @@
     <ClInclude Include="BasicTimer.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LoadCMOModel.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -160,6 +161,9 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="GameEngine_TemporaryKey.pfx" />
+    <None Include="skull.cmo">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Logo.scale-100.png" />
@@ -177,6 +181,7 @@
     </ClCompile>
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LoadCMOModel.cpp" />
     <ClCompile Include="MainPage.xaml.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>

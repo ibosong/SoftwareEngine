@@ -136,6 +136,9 @@ void GameEngine::MainPage::Page_Loaded(Platform::Object^ sender, Windows::UI::Xa
 		m_cube = { vertices, cubeIndices, nullptr };
 	});
 
+
+	m_skullModel = CMOModel::CreateFromCMO(L"skull.cmo");
+
 	Size outputSize = Size(static_cast<float>(m_pixelWidth), static_cast<float>(m_pixelHeight));
 	float aspectRatio = outputSize.Width / outputSize.Height;
 	float fovAngleY = 70.0f * XM_PI / 180.0f;
@@ -154,7 +157,7 @@ void GameEngine::MainPage::Page_Loaded(Platform::Object^ sender, Windows::UI::Xa
 		);
 
 	// Eye is at (0,1.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.9f, 3.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.9f, 13.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -214,8 +217,9 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 
 void MainPage::btnDraw3D_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	
-	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(*m_skullModel->meshes[0], XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+
+	//m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }

@@ -9,6 +9,7 @@
 #include "Rasterizer.h"
 #include "DirectXMath.h"
 #include "BasicTimer.h"
+#include "LoadCMOModel.h"
 namespace GameEngine
 {
 
@@ -22,7 +23,7 @@ namespace GameEngine
 		Rasterizer m_rasterizer;
 		byte* m_buffer;
 		Mesh m_cube;
-
+		std::unique_ptr<CMOModel> m_skullModel;
 		BasicTimer^ m_timer;
 		
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
