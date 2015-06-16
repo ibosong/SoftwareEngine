@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Mesh.h"
 #include "Point.h"
+#include "LoadCMOModel.h"
 #include <mutex>
 namespace GameEngine
 {
@@ -27,6 +28,8 @@ namespace GameEngine
 		void XM_CALLCONV RenderZ(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
 		void XM_CALLCONV RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
+
+		void XM_CALLCONV RenderCMOModel(CMOModel* model, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix);
 
 	private:
 		void SetPixel(unsigned int x, unsigned int y, const Color &color);

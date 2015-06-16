@@ -136,6 +136,8 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LoadCMOModel.h" />
+    <ClInclude Include="LoadOBJModel.h" />
+    <ClInclude Include="memoryfile.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -182,9 +184,11 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LoadCMOModel.cpp" />
+    <ClCompile Include="LoadOBJModel.cpp" />
     <ClCompile Include="MainPage.xaml.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="memoryfile.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

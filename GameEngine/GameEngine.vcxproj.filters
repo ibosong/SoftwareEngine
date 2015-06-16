@@ -20,6 +20,12 @@
     <Image Include="Assets\SplashScreen.scale-100.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="util">
+      <UniqueIdentifier>{1ab1a428-5269-460e-9224-948aaac3dd45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadModel">
+      <UniqueIdentifier>{51fb5231-9d65-42c3-b37f-4203bf8e4dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -34,7 +40,13 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Light.cpp" />
-    <ClCompile Include="LoadCMOModel.cpp" />
+    <ClCompile Include="memoryfile.cpp" />
+    <ClCompile Include="LoadCMOModel.cpp">
+      <Filter>LoadModel</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadOBJModel.cpp">
+      <Filter>LoadModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -47,7 +59,13 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="BasicTimer.h" />
-    <ClInclude Include="LoadCMOModel.h" />
+    <ClInclude Include="memoryfile.h" />
+    <ClInclude Include="LoadCMOModel.h">
+      <Filter>LoadModel</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadOBJModel.h">
+      <Filter>LoadModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

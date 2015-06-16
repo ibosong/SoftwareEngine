@@ -548,3 +548,11 @@ void XM_CALLCONV Rasterizer::RenderY(const Mesh& mesh, DirectX::FXMMATRIX worldM
 		DrawTriangle(p1, p2, p3, mesh.texture.get());
 	}
 }
+
+void XM_CALLCONV Rasterizer::RenderCMOModel(CMOModel* model, DirectX::FXMMATRIX worldMatrix, DirectX::FXMMATRIX viewMatrix, DirectX::FXMMATRIX projectMatrix)
+{
+	for (auto mesh : model->meshes)
+	{
+		RenderMeth(*mesh, worldMatrix, viewMatrix, projectMatrix);
+	}
+}

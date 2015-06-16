@@ -108,6 +108,45 @@ namespace GameEngine
 		DirectX::XMFLOAT2 textureCoordinate;
 	};
 
+	const uint32_t NUM_BONE_INFLUENCES = 4;
+
+	struct SkinningVertex
+	{
+		UINT boneIndex[NUM_BONE_INFLUENCES];
+		float boneWeight[NUM_BONE_INFLUENCES];
+	};
+
+	struct MeshExtents
+	{
+		float CenterX, CenterY, CenterZ;
+		float Radius;
+
+		float MinX, MinY, MinZ;
+		float MaxX, MaxY, MaxZ;
+	};
+
+	struct Bone
+	{
+		INT ParentIndex;
+		DirectX::XMFLOAT4X4 InvBindPos;
+		DirectX::XMFLOAT4X4 BindPos;
+		DirectX::XMFLOAT4X4 LocalTransform;
+	};
+
+	struct Clip
+	{
+		float StartTime;
+		float EndTime;
+		UINT  keys;
+	};
+
+	struct Keyframe
+	{
+		UINT BoneIndex;
+		float Time;
+		DirectX::XMFLOAT4X4 Transform;
+	};
+
 	const uint32_t MAX_TEXTURE = 8;
 
 	class CMOModel

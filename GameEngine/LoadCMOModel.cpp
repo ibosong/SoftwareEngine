@@ -34,7 +34,7 @@ std::unique_ptr<CMOModel> CMOModel::CreateFromCMO(const wchar_t* szFileName)
 	if (!*pMeshCount)
 		throw std::exception("No meshes found");
 
-	for (UINT meshIndex = 0; meshIndex < 1/**pMeshCount*/; ++meshIndex)
+	for (UINT meshIndex = 0; meshIndex < *pMeshCount; ++meshIndex)
 	{
 		auto mesh = std::make_shared<Mesh>();
 
@@ -218,6 +218,127 @@ std::unique_ptr<CMOModel> CMOModel::CreateFromCMO(const wchar_t* szFileName)
 			}
 			
 		}
+
+		// Skinning vertex buffers, not used here
+		auto pSkinVBCount = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+		usedSize += sizeof(UINT);
+		if (dataSize < usedSize)
+			throw std::exception("End of file");
+		if (*pSkinVBCount)
+		{
+			if (*pSkinVBCount != *pVBCount)
+				throw std::exception("Number of VBs not equal to number of skin VBs");
+
+			for (UINT j = 0; j < *pSkinVBCount; ++j)
+			{
+				auto nVerts = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+				usedSize += sizeof(UINT);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				if (!*nVerts)
+					throw std::exception("Empty skinning vertex buffer found\n");
+
+
+				size_t vbBytes = sizeof(SkinningVertex) * (*(nVerts));
+
+				auto verts = reinterpret_cast<const SkinningVertex*>(meshData.get() + usedSize);
+				usedSize += vbBytes;
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+			}
+		}
+
+		// Extents, not used here
+		auto extents = reinterpret_cast<const MeshExtents*>(meshData.get() + usedSize);
+		usedSize += sizeof(MeshExtents);
+		if (dataSize < usedSize)
+			throw std::exception("End of file");
+
+
+
+		// Animation data, not used here
+		if (*bSkeleton)
+		{
+			// Bones
+			auto pBonesCount = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+			usedSize += sizeof(UINT);
+			if (dataSize < usedSize)
+				throw std::exception("End of file");
+
+			if (!*pBonesCount)
+				throw std::exception("Animation bone data is missing\n");
+
+			for (UINT j = 0; j < *pBonesCount; ++j)
+			{
+				// Bone name
+				pNameLength = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+				usedSize += sizeof(UINT);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				auto boneName = reinterpret_cast<const wchar_t*>(meshData.get() + usedSize);
+
+				usedSize += sizeof(wchar_t)*(*pNameLength);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				// TODO - What to do with bone name?
+				boneName;
+
+				// Bone settings
+				auto bones = reinterpret_cast<const Bone*>(meshData.get() + usedSize);
+				usedSize += sizeof(Bone);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				// TODO - What to do with bone data?
+				bones;
+			}
+
+			// Animation Clips
+			auto pClipsCount = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+			usedSize += sizeof(UINT);
+			if (dataSize < usedSize)
+				throw std::exception("End of file");
+
+			for (UINT j = 0; j < *pClipsCount; ++j)
+			{
+				// Clip name
+				pNameLength = reinterpret_cast<const UINT*>(meshData.get() + usedSize);
+				usedSize += sizeof(UINT);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				auto clipName = reinterpret_cast<const wchar_t*>(meshData.get() + usedSize);
+
+				usedSize += sizeof(wchar_t)*(*pNameLength);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				// TODO - What to do with clip name?
+				clipName;
+
+				auto clip = reinterpret_cast<const Clip*>(meshData.get() + usedSize);
+				usedSize += sizeof(Clip);
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				if (!clip->keys)
+					throw std::exception("Keyframes missing in clip");
+
+				auto keys = reinterpret_cast<const Keyframe*>(meshData.get() + usedSize);
+				usedSize += sizeof(Keyframe) * clip->keys;
+				if (dataSize < usedSize)
+					throw std::exception("End of file");
+
+				// TODO - What to do with keys and clip->StartTime, clip->EndTime?
+				keys;
+			}
+		}
+
+
 		model->meshes.emplace_back(mesh);
 		
 	}

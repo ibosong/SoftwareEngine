@@ -29,7 +29,7 @@ MainPage::MainPage() : m_pixelWidth(1000), m_pixelHeight(1000), m_timer(ref new 
 {
 	InitializeComponent();	
 
-	//CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);	
+	CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &MainPage::OnRendering);	
 }
 
 
@@ -206,7 +206,8 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 	//angle = std::fmod(angle, 3.14 * 2);
 	XMMATRIX world = XMMatrixRotationY(angle);
 
-	m_rasterizer.RenderMeth(m_cube, world, m_viewMatrix, m_projectMatrix);
+	//m_rasterizer.RenderMeth(m_cube, world, m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderCMOModel(m_skullModel.get(), world, m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 	if (m_timer->Delta > 0.f)
@@ -217,9 +218,7 @@ void MainPage::OnRendering(Platform::Object^ sender, Platform::Object^ args)
 
 void MainPage::btnDraw3D_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_rasterizer.RenderMeth(*m_skullModel->meshes[0], XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
-
-	//m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
+	m_rasterizer.RenderMeth(m_cube, XMMatrixIdentity(), m_viewMatrix, m_projectMatrix);
 
 	m_bitmap->Invalidate();
 }
