@@ -40,12 +40,14 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Light.cpp" />
-    <ClCompile Include="memoryfile.cpp" />
     <ClCompile Include="LoadCMOModel.cpp">
       <Filter>LoadModel</Filter>
     </ClCompile>
     <ClCompile Include="LoadOBJModel.cpp">
       <Filter>LoadModel</Filter>
+    </ClCompile>
+    <ClCompile Include="memoryfile.cpp">
+      <Filter>util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,12 +61,14 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="BasicTimer.h" />
-    <ClInclude Include="memoryfile.h" />
     <ClInclude Include="LoadCMOModel.h">
       <Filter>LoadModel</Filter>
     </ClInclude>
     <ClInclude Include="LoadOBJModel.h">
       <Filter>LoadModel</Filter>
+    </ClInclude>
+    <ClInclude Include="memoryfile.h">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

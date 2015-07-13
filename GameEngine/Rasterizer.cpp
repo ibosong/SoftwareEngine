@@ -27,7 +27,7 @@ void Rasterizer::Clear()
 
 void Rasterizer::SetPixel(unsigned int x, unsigned int y, const Color &color)
 {
-	if (x >= m_pixelWidth || y >= m_pixelHeight)
+	if (x >= m_pixelWidth || y >= m_pixelHeight || x < 0 || y < 0)
 		return;
 	ByteColor byteColor = color.ToByte();
 	
@@ -49,12 +49,16 @@ void Rasterizer::SetPixel(float x, float y, const Color &color)
 
 void Rasterizer::SetPixel(unsigned int x, unsigned int y, double z, const Color &color)
 {
-	if (zbuffer[y * m_pixelWidth + x] < z)
+	if (x < m_pixelWidth && y < m_pixelHeight && x >= 0 && y >= 0)
 	{
-		return;
+		if (zbuffer[y * m_pixelWidth + x] < z)
+		{
+			return;
+		}
+
+		zbuffer.at(y * m_pixelWidth + x) = z;
 	}
 
-	zbuffer.at(y * m_pixelWidth + x) = z;
 	SetPixel(x, y, color);
 }
 
